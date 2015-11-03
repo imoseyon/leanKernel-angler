@@ -1,0 +1,24 @@
+#
+# ADDITIONAL_DEFAULT_PROPERTIES
+#
+ro.secure=1
+ro.allow.mock.location=0
+ro.debuggable=0
+ro.zygote=zygote64_32
+dalvik.vm.image-dex2oat-Xms=64m
+dalvik.vm.image-dex2oat-Xmx=64m
+dalvik.vm.dex2oat-Xms=64m
+dalvik.vm.dex2oat-Xmx=512m
+ro.dalvik.vm.native.bridge=0
+debug.atrace.tags.enableflags=0
+persist.radio.snapshot_enabled=1
+persist.radio.snapshot_timer=2
+ro.adb.secure=1
+#
+# BOOTIMAGE_BUILD_PROPERTIES
+#
+ro.bootimage.build.date=Tue Oct 20 00:01:56 UTC 2015
+ro.bootimage.build.date.utc=1445299316
+ro.bootimage.build.fingerprint=google/angler/angler:6.0/MDB08M/2353240:user/release-keys
+persist.sys.usb.config=none
+
