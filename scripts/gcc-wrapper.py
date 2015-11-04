@@ -51,6 +51,7 @@ allowed_warnings = set([
     "nfnetlink_queue_core.c:264",
     "nfnetlink_queue_core.c:265",
     "irq.c:159",
+    "ci13xxx_udc.c:4035",
  ])
 
 # Capture the name of the object file, can find it.
