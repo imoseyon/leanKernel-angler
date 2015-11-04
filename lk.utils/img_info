@@ -1,4 +1,4 @@
-kernel=/lk2/angler_obj/arch/arm/boot/zImage-dtb
+kernel=/lk2/angler_obj/arch/arm64/boot/Image.gz-dtb
 ramdisk=/lk2/angler/lk.ramdisk
 page_size=4096
 kernel_size=11057472

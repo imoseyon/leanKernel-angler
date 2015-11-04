@@ -4,14 +4,14 @@ sdir="/lk2/angler"
 udir="/lk2/angler/lk.utils"
 objdir="/lk2/angler_obj"
 device="angler"
-cc="/data/linaro/49/arm-cortex_a15-linux-gnueabihf-linaro/bin/arm-eabi-"
+cc="/data/toolchain/latest/bin/aarch64-"
 filename="lk_${device}_m-v${1}.zip"
 mkbootimg="/data/mkbootimg_tools2/mkboot"
 
 compile() {
   cd $sdir
   sed -i s/CONFIG_LOCALVERSION=\".*\"/CONFIG_LOCALVERSION=\"-leanKernel-${device}-${1}-\"/ $objdir/.config
-  make O=$objdir ARCH=arm CROSS_COMPILE=$cc -j4
+  make O=$objdir ARCH=arm64 CROSS_COMPILE=$cc -j4
 }
 
 ramdisk() {
