@@ -1,0 +1,16 @@
+service supolicy /system/xbin/supolicy --live \
+	"allow ssr device dir read" \
+	"allow shell dalvikcache_data_file file write" \
+	"allow shell dalvikcache_data_file dir write"
+     disabled
+     oneshot
+
+service lk-post-boot /sbin/lk-post-boot.sh
+     class late_start
+     user root
+     disabled
+     oneshot
+
+on property:supolicy.loaded=1
+     start lk-post-boot
+     start supolicy
