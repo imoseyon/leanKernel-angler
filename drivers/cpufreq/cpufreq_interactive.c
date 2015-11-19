@@ -36,6 +36,8 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/cpufreq_interactive.h>
 
+extern bool mdss_screen_on;
+
 struct cpufreq_interactive_cpuinfo {
 	struct timer_list cpu_timer;
 	struct timer_list cpu_slack_timer;
@@ -84,6 +86,9 @@ static unsigned int default_target_loads[] = {DEFAULT_TARGET_LOAD};
 #define DEFAULT_ABOVE_HISPEED_DELAY DEFAULT_TIMER_RATE
 static unsigned int default_above_hispeed_delay[] = {
 	DEFAULT_ABOVE_HISPEED_DELAY };
+
+#define DEFAULT_SCREEN_OFF_MAX 1555200
+static unsigned long screen_off_max = DEFAULT_SCREEN_OFF_MAX;
 
 struct cpufreq_interactive_tunables {
 	int usage_count;
@@ -648,7 +653,11 @@ static int cpufreq_interactive_speedchange_task(void *data)
 				pjcpu->floor_validate_time = fvt;
 			}
 
+			if (unlikely(!mdss_screen_on))
+				if (max_freq > screen_off_max) max_freq = screen_off_max;
+
 			if (max_freq != pcpu->policy->cur) {
+
 				__cpufreq_driver_target(pcpu->policy,
 							max_freq,
 							CPUFREQ_RELATION_H);
@@ -1121,6 +1130,25 @@ static ssize_t store_boostpulse_duration(struct cpufreq_interactive_tunables
 	return count;
 }
 
+static ssize_t show_screen_off_maxfreq(struct cpufreq_interactive_tunables *tunables,
+                char *buf)
+{
+	return sprintf(buf, "%lu\n", screen_off_max);
+}
+
+static ssize_t store_screen_off_maxfreq(struct cpufreq_interactive_tunables *tunables,
+                const char *buf, size_t count)
+{
+	int ret;
+	unsigned long val;
+
+	ret = strict_strtoul(buf, 0, &val);
+	if (ret < 0) return ret;
+	if (val < 384000) screen_off_max = DEFAULT_SCREEN_OFF_MAX;
+	else screen_off_max = val;
+	return count;
+}
+
 static ssize_t show_io_is_busy(struct cpufreq_interactive_tunables *tunables,
 		char *buf)
 {
@@ -1343,6 +1371,7 @@ show_store_gov_pol_sys(use_sched_load);
 show_store_gov_pol_sys(use_migration_notif);
 show_store_gov_pol_sys(max_freq_hysteresis);
 show_store_gov_pol_sys(align_windows);
+show_store_gov_pol_sys(screen_off_maxfreq);
 
 #define gov_sys_attr_rw(_name)						\
 static struct global_attr _name##_gov_sys =				\
@@ -1370,6 +1399,7 @@ gov_sys_pol_attr_rw(use_sched_load);
 gov_sys_pol_attr_rw(use_migration_notif);
 gov_sys_pol_attr_rw(max_freq_hysteresis);
 gov_sys_pol_attr_rw(align_windows);
+gov_sys_pol_attr_rw(screen_off_maxfreq);
 
 static struct global_attr boostpulse_gov_sys =
 	__ATTR(boostpulse, 0200, NULL, store_boostpulse_gov_sys);
@@ -1394,6 +1424,7 @@ static struct attribute *interactive_attributes_gov_sys[] = {
 	&use_migration_notif_gov_sys.attr,
 	&max_freq_hysteresis_gov_sys.attr,
 	&align_windows_gov_sys.attr,
+	&screen_off_maxfreq_gov_sys.attr,
 	NULL,
 };
 
@@ -1419,6 +1450,7 @@ static struct attribute *interactive_attributes_gov_pol[] = {
 	&use_migration_notif_gov_pol.attr,
 	&max_freq_hysteresis_gov_pol.attr,
 	&align_windows_gov_pol.attr,
+	&screen_off_maxfreq_gov_pol.attr,
 	NULL,
 };
 
@@ -1720,6 +1752,7 @@ static int __init cpufreq_interactive_init(void)
 	struct cpufreq_interactive_cpuinfo *pcpu;
 	struct sched_param param = { .sched_priority = MAX_RT_PRIO-1 };
 
+	mdss_screen_on = true;
 	/* Initalize per-cpu timers */
 	for_each_possible_cpu(i) {
 		pcpu = &per_cpu(cpuinfo, i);
