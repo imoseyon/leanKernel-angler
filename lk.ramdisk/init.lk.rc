@@ -1,5 +1,7 @@
 service supolicy /system/xbin/supolicy --live \
 	"allow ssr device dir read" \
+	"allow init kernel security read_policy" \
+	"allow zygote init unix_stream_socket { read write }" \
 	"allow shell dalvikcache_data_file file write" \
 	"allow shell dalvikcache_data_file dir write"
      disabled
@@ -12,5 +14,5 @@ service lk-post-boot /sbin/lk-post-boot.sh
      oneshot
 
 on property:supolicy.loaded=1
-     start lk-post-boot
      start supolicy
+     start lk-post-boot
