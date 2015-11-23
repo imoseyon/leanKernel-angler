@@ -3,6 +3,7 @@ service supolicy /system/xbin/supolicy --live \
 	"allow init kernel security read_policy" \
 	"allow zygote init unix_stream_socket { read write }" \
 	"allow shell dalvikcache_data_file file write" \
+	"allow mediaserver mediaserver_tmpfs file execute" \
 	"allow shell dalvikcache_data_file dir write"
      disabled
      oneshot
