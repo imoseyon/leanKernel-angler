@@ -38,3 +38,11 @@ SFILE="/sys/devices/soc.0/f9924000.i2c/i2c-2/2-0070/input/input0/wake_gesture"
 CFILE="/data/data/leankernel/wlan_rx"
 SFILE="/sys/module/bcmdhd/parameters/wl_divide"
 [ -f $CFILE ] && echo `cat $CFILE` > $SFILE
+
+# OC control
+CFILE="/data/data/leankernel/a53oc"
+SFILE="/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq"
+[ -f $CFILE ] && echo `cat $CFILE` > $SFILE
+CFILE="/data/data/leankernel/a57oc"
+SFILE="/sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq"
+[ -f $CFILE ] && echo `cat $CFILE` > $SFILE
