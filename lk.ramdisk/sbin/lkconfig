@@ -18,6 +18,7 @@ echo "1) wake gesture control"
 echo "2) wakelock control"
 echo "3) rgb/picture control"
 echo "4) interactiveX control"
+echo "5) cpu overclock control"
 echo
 echo "21) check top 10 wake locks (ie. wakeup sources)"
 echo
@@ -43,6 +44,10 @@ case $option in
 	echo "   rgb: $rgb, sat: $sat, cont: $cont, hue: $hue, gamma: $gamma"
 	echo -n "4) interactiveX screenoff max: "
 	cat /sys/devices/system/cpu/cpu0/cpufreq/interactive/screen_off_maxfreq
+	a53top=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq`
+	sleep 1
+	a57top=`cat /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq`
+	echo "5) a53 top frequency: $a53top, a57 top frequency: $a57top"
 	;;
 
 1)
@@ -84,6 +89,7 @@ case $option in
 	esac
 	[ $mc -eq 1 ] && echo && echo "Done! (also will persist at boot)"
 	;;
+
 3)
         echo -n "Enter three values (red green blue) between 0-255 (default 255 255 255, enter to skip): "
 	mc=0
@@ -142,6 +148,38 @@ case $option in
 		echo $FREQ > /sys/devices/system/cpu/cpu0/cpufreq/interactive/screen_off_maxfreq
 		[ $mc -eq 1 ] && echo && echo "Done! (also will persist at boot)"
 	fi
+	;;
+
+5)
+        echo "Enter 0 for stock (no OC, default), 1 for a53 OC only, 2 for a57 OC only, and 3 for both OC: "
+	read value
+	case $value in
+	  0)
+		echo 1958400 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+		echo 1555200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+		rm -f $lkdata/a53oc $lkdata/a57oc
+		;;
+	  1)
+		echo 1958400 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+		echo 1632000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+		rm -f $lkdata/a57oc
+		echo "1632000" > $lkdata/a53oc
+		;;
+	  2)
+		echo 2200000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+		echo 1555200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+		rm -f $lkdata/a53oc
+		echo "2200000" > $lkdata/a57oc
+		;;
+	  3)
+		echo 2200000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+		echo 1632000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+		echo "2200000" > $lkdata/a57oc
+		echo "1632000" > $lkdata/a53oc
+		;;
+	  *) mc=0;;
+	esac
+	[ $mc -eq 1 ] && echo && echo "Done! (also will persist at boot)"
 	;;
 
 21)
