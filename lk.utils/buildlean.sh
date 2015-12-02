@@ -35,4 +35,14 @@ zipit() {
   cd $sdir
 } 
 
+cm_ramdisk() {
+  cd /tmp/angler.cm/ramdisk
+  cp -a * $sdir/lk.ramdisk
+  cd $sdir
+  git checkout lk.ramdisk/init.rc lk.ramdisk/init.angler.rc
+}
+
+[[ $1 =~ "cm" ]] && [[ `git status -s lk.ramdisk` ]] && echo "uncommitted changes in ramdisk!" && exit
+[[ $1 =~ "cm" ]] && cm_ramdisk
 compile $1 && ramdisk && zipit $filename
+[[ $1 =~ "cm" ]] && git checkout HEAD lk.ramdisk && git clean -f lk.ramdisk
