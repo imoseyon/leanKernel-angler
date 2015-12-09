@@ -17,8 +17,8 @@ ro.adb.secure=1
 #
 # BOOTIMAGE_BUILD_PROPERTIES
 #
-ro.bootimage.build.date=Tue Oct 20 00:01:56 UTC 2015
-ro.bootimage.build.date.utc=1445299316
-ro.bootimage.build.fingerprint=google/angler/angler:6.0/MDB08M/2353240:user/release-keys
+ro.bootimage.build.date=Tue Nov 17 19:21:24 UTC 2015
+ro.bootimage.build.date.utc=1447788084
+ro.bootimage.build.fingerprint=google/angler/angler:6.0.1/MMB29M/2431559:user/release-keys
 persist.sys.usb.config=none
 
