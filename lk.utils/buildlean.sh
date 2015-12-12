@@ -39,7 +39,7 @@ cm_ramdisk() {
   cd /tmp/angler.cm/ramdisk
   cp -a * $sdir/lk.ramdisk
   cd $sdir
-  git checkout lk.ramdisk/init.rc lk.ramdisk/init.angler.rc
+  git checkout lk.ramdisk/init.rc lk.ramdisk/init.angler.rc lk.ramdisk/fstab.angler
 }
 
 [[ $1 =~ "cm" ]] && [[ `git status -s lk.ramdisk` ]] && echo "uncommitted changes in ramdisk!" && exit
