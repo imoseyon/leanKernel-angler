@@ -53,6 +53,7 @@ on init
     chmod 0220 /sys/fs/cgroup/memory/cgroup.event_control
 
     mkdir /system
+    mkdir /su 0755 root root # create mount point for SuperSU
     mkdir /data 0771 system system
     mkdir /cache 0770 system cache
     mkdir /config 0500 root root
@@ -291,6 +292,12 @@ on post-fs-data
     chmod 0771 /data
     # We restorecon /data in case the userdata partition has been reset.
     restorecon /data
+
+    # mount SuperSU image
+    cp /cache/su.img /data/su.img
+    rm /cache/su.img
+    chmod 0600 /data/su.img
+    mount ext4 loop@/data/su.img /su noatime
 
     # Emulated internal storage area
     mkdir /data/media 0770 media_rw media_rw
@@ -769,3 +776,8 @@ service logcatd /system/bin/logcat -b all -v threadtime -v usec -v printable -D 
     user logd
     group log
     writepid /dev/cpuset/system-background/tasks
+
+service daemonsu /su/bin/daemonsu --auto-daemon
+    class late_start
+    user root
+    oneshot
