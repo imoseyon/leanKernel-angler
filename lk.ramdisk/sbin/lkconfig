@@ -20,6 +20,7 @@ echo "3) rgb/picture control"
 echo "4) interactiveX control"
 echo
 echo "21) check top 10 wake locks (ie. wakeup sources)"
+echo "22) memory cleanup and hotboot"
 echo
 echo -n "please enter a number (or press enter to exit): "
 read option
@@ -157,6 +158,14 @@ case $option in
 	else
 		echo "busybox required!"
 	fi
+	;;
+22)
+	echo -n "Hit enter when ready - this will purge cache and hotboot the phone: "
+	read value
+	sync
+	echo 3 > /proc/sys/vm/drop_caches
+	sync
+	pkill zygote
 	;;
 *)
 	exit
