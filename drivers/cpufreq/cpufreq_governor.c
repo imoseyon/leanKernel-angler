@@ -44,7 +44,6 @@ void dbs_check_cpu(struct dbs_data *dbs_data, int cpu)
 
 	if (dbs_data->cdata->governor == GOV_ONDEMAND)
 		ignore_nice = od_tuners->ignore_nice_load;
-	else
 	} else if (dbs_data->cdata->governor == GOV_ELEMENTALX) {
 		sampling_rate = ex_tuners->sampling_rate;
 		ignore_nice = ex_tuners->ignore_nice_load;
