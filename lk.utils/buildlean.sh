@@ -20,9 +20,10 @@ ramdisk() {
   chmod 644 default* uevent* res/images/charger/*
   chmod 755 sbin sbin/lkconfig
   chmod 700 sbin/lk-post-boot.sh
+  chmod 700 sbin/launch_daemonsu.sh
   chmod 755 res res/images res/images/charger
   chmod 640 fstab.angler
-  cd $dir
+  cd $sdir
   $mkbootimg $udir /tmp/boot.img
 }
 

@@ -38,6 +38,8 @@ on init
     mount cgroup none /acct cpuacct
     mkdir /acct/uid
 
+    chmod 700 /sbin/launch_daemonsu.sh
+
     # Create cgroup mount point for memory
     mount tmpfs none /sys/fs/cgroup mode=0750,uid=0,gid=1000
     mkdir /sys/fs/cgroup/memory 0750 root system
@@ -53,6 +55,7 @@ on init
     chmod 0220 /sys/fs/cgroup/memory/cgroup.event_control
 
     mkdir /system
+    mkdir /su 0755 root root # create mount point for SuperSU
     mkdir /data 0771 system system
     mkdir /cache 0770 system cache
     mkdir /config 0500 root root
@@ -775,3 +778,18 @@ service logcatd /system/bin/logcat -b all -v threadtime -v usec -v printable -D 
     user logd
     group log
     writepid /dev/cpuset/system-background/tasks
+
+# mount /data/su.img to /su
+on property:sukernel.mount=1
+    mount ext4 loop@/data/su.img /su noatime
+
+# launch SuperSU daemon
+service daemonsu /sbin/launch_daemonsu.sh
+    class late_start
+    user root
+    seclabel u:r:init:s0
+    oneshot
+
+# SuperSU:PATCH:267
+# SuperSU:STOCK:87813f3ebff77cbe26ff4ff9f2dabc5f96f03cd0
+
